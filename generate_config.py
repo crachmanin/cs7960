@@ -4,7 +4,8 @@ import os
 
 default_params = {
     "paths" : {
-        "dataset_path" : "%(path_wd)s/../../datasets/mnist",
+        # "dataset_path" : "%(path_wd)s/../../datasets/mnist",
+        "dataset_path" : "%(path_wd)s/../../mnist",
         "filename_ann" : "mnist_mlp"
     },
     "input" : {
