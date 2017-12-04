@@ -1,9 +1,10 @@
 import glob
 import os
 
+
 default_params = {
     "paths" : {
-        "dataset_path" : "%(path_wd)s/../../../datasets/mnist",
+        "dataset_path" : "%(path_wd)s/../../datasets/mnist",
         "filename_ann" : "mnist_mlp"
     },
     "input" : {
@@ -80,7 +81,14 @@ def main():
         generate_permutations(result, output, 0)
 
     for i, config_dict in enumerate(result):
-        fn = os.path.join("configs", "config{0:0=3d}".format(i))
+	name = "config{0:0=3d}".format(i)
+        fn = os.path.join("configs", name, name)
+	if not os.path.exists(os.path.dirname(fn)):
+    	    try:
+                os.makedirs(os.path.dirname(fn))
+    	    except OSError as exc:
+        	if exc.errno != errno.EEXIST:
+            	    raise
         with open(fn, 'w') as fp:
             config_str = dict_to_str(config_dict)
             fp.write(config_str)
