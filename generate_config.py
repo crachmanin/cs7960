@@ -1,11 +1,51 @@
 import glob
 import os
+import copy
 
-
+'''
+[cell]
+v_thresh = 10
+tau_refrac = 1
+v_reset = 0
+v_rest = -65.0
+e_rev_E = 10
+e_rev_I = -10
+i_offset = 0
+cm = 1.0
+tau_m = 20.0
+tau_syn_E = 5.0
+tau_syn_I = 5.0
+delay = 1
+binarize_weights = False
+quantize_weights = False
+scaling_factor = 10000000
+payloads = False
+reset = Reset by subtraction
+leak = True
+'''
 default_params = {
+    "cells" : {
+	"v_thresh" : "10",
+	"tau_refrac" : "1",
+	"v_reset" : "0",
+	"v_rest" : "-65.0",
+	"e_rev_E" : "10",
+	"e_rev_I" : "-10",
+	"i_offset" : "0",
+	"cm" : "1.0",
+	"tau_m" : "20.0",
+	"tau_syn_E" : "5.0",
+	"tau_syn_I" : "5.0",
+	"delay" : "1",
+	"binarize_weights" : "False",
+	"quantize_weights" : "False",
+	"scaling_factor" : "10000000",
+	"payloads" : "False",
+	"reset" : "Reset by subtraction",
+	"leak" : "True"
+    },
     "paths" : {
-        # "dataset_path" : "%(path_wd)s/../../datasets/mnist",
-        "dataset_path" : "%(path_wd)s/../../mnist",
+        "dataset_path" : "%(path_wd)s/../../datasets/mnist",
         "filename_ann" : "mnist_mlp"
     },
     "input" : {
@@ -31,7 +71,7 @@ params = [
     (("conversion", "max2avg_pool"), ["True", "False"]),
     (("conversion", "spike_code"), ["temporal_mean_rate", "temporal_pattern"]),
     (("conversion", "num_bits"), ["16", "32", "64"]),
-    (("simulation", "duration"), ["10", "20"])
+    (("simulation", "duration"), ["20", "30"])
 ]
 
 def generate_permutations(result, output, index):
@@ -42,11 +82,13 @@ def generate_permutations(result, output, index):
     for val in params[index][1]:
         section, param = params[index][0]
 
-        if section not in output:
-            output[section] = {}
+	out_copy = copy.deepcopy(output)
 
-        output[section][param] = val
-        generate_permutations(result, output, index + 1)
+        if section not in output:
+            out_copy[section] = {}
+
+        out_copy[section][param] = val
+        generate_permutations(result, out_copy, index + 1)
 
 
 def neuron_to_dict(neuron_file):
@@ -75,13 +117,14 @@ def dict_to_str(config_dict):
 def main():
     neuron_fns = glob.glob("neuron_types/*")
     result = []
-    for neuron_fn in neuron_fns:
-        neuron_dict = neuron_to_dict(neuron_fn)
-        output = dict(default_params)
-        output["cell"] = neuron_dict
-        generate_permutations(result, output, 0)
+    #for neuron_fn in neuron_fns:
+    #    neuron_dict = neuron_to_dict(neuron_fn)
+    output = dict(default_params)
+    #    output["cell"] = neuron_dict
+    generate_permutations(result, output, 0)
 
     for i, config_dict in enumerate(result):
+	print (config_dict)
 	name = "config{0:0=3d}".format(i)
         fn = os.path.join("configs", name, name)
 	if not os.path.exists(os.path.dirname(fn)):
