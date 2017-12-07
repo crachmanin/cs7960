@@ -1,4 +1,9 @@
 #!/bin/bash
+
+if [ ! -d "$DIRECTORY" ]; then
+	./gen_env.sh
+fi	 
+
 source venv/bin/activate
 for d in configs/config$1* ; do
 	#echo $d
