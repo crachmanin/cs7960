@@ -18,7 +18,6 @@ Lasagne==0.1
 lazyarray==0.3.2
 Markdown==2.6.9
 MarkupSafe==1.0
-matplotlib==2.1.0
 mock==2.0.0
 mpmath==1.0.0
 neo==0.5.2
