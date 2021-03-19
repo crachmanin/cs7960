@@ -12,7 +12,7 @@ futures==3.1.1
 h5py==2.7.1
 html5lib==0.9999999
 idna==2.6
-Jinja2==2.10
+Jinja2==2.11.3
 Keras==2.1.1
 Lasagne==0.1
 lazyarray==0.3.2
